@@ -8,7 +8,7 @@ struct sysinfo info;
 int main (){
   sysinfo(&info);
  
-  /* Get free ram and total ram converted to GB */
+  /* Get free and total ram converted to GB */
   float ram_used = (info.totalram - info.freeram) / ((float)1073741824);
   float ram_total = info.totalram / ((float)1073741824);
 
