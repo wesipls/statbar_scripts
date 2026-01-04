@@ -11,5 +11,6 @@ int main (){
   float swap_total = info.totalswap / ((float)1073741824);
 
   printf("%.1fG/%.1fG\n", swap_used, swap_total);
+  
   return 0;
 }

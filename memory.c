@@ -13,5 +13,6 @@ int main (){
   float ram_total = info.totalram / ((float)1073741824);
 
   printf("%.1fG/%.1fG\n", ram_used, ram_total);
+  
   return 0;
 }
