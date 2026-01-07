@@ -1,3 +1,5 @@
+/* TODO: Change K to M in output if bytes exceed 1000K */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,9 +37,6 @@ int main() {
   write_bytes(&i, bytes_out_current, tx_bytes_last);
   int converted_out_bytes_diff = bytes_diff(i, time_diff, bytes_out_current, bytes_out_last);  /* Difference in bytes_in_current and bytes_in_last */
 
-//DEBUG
-//  printf("%d\n", i); 
-//  printf("%s / %s\n", bytes_in_current, bytes_in_last);
   printf("\u21F5 %dK/%dK\n", converted_in_bytes_diff, converted_out_bytes_diff);
   return 0;
 };
