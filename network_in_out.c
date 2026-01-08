@@ -72,5 +72,7 @@ void bytes_diff(int counter, int time, char *bytes_current, char *bytes_last, ch
     } else {
       sprintf(converted_bytes, "%dK", converted_bytes_diff);
     }
+  } else {
+    sprintf(converted_bytes, "NA");
   }
 }
