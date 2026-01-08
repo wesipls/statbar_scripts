@@ -7,7 +7,7 @@
 #define STRSIZE 32
 
 void read_bytes(int *counter, char *bytes, char *read_file); /* Read files from rx_bytes and define to variable */
-void write_bytes(int *counter, char *bytes, char *read_file); /* Write rx_bytes from variable to tmp file for last received bytes tracking */
+void write_bytes(char *bytes, char *read_file); /* Write rx_bytes from variable to tmp file for last received bytes tracking */
 int bytes_diff(int counter, int time, char *bytes_current, char *bytes_last); /* Calculate last received bytes and current received bytes for difference in recived bytes for last x seconds */
 
 int main() {
@@ -27,14 +27,14 @@ int main() {
 
   read_bytes(&i, bytes_in_current, rx_bytes_current);
   read_bytes(&i, bytes_in_last, rx_bytes_last); 
-  write_bytes(&i, bytes_in_current, rx_bytes_last);
+  write_bytes(bytes_in_current, rx_bytes_last);
   int converted_in_bytes_diff = bytes_diff(i, time_diff, bytes_in_current, bytes_in_last);  /* Difference in bytes_in_current and bytes_in_last */
 
   i = 0; /* Resetting i for counting bytes out */
 
   read_bytes(&i, bytes_out_current, tx_bytes_current);
   read_bytes(&i, bytes_out_last, tx_bytes_last); 
-  write_bytes(&i, bytes_out_current, tx_bytes_last);
+  write_bytes(bytes_out_current, tx_bytes_last);
   int converted_out_bytes_diff = bytes_diff(i, time_diff, bytes_out_current, bytes_out_last);  /* Difference in bytes_in_current and bytes_in_last */
 
   printf("\u21F5 %dK/%dK\n", converted_in_bytes_diff, converted_out_bytes_diff);
@@ -52,7 +52,7 @@ void read_bytes(int *counter, char *bytes, char *read_file) {
   }
 }
 
-void write_bytes(int *counter, char *bytes, char *read_file) {
+void write_bytes( char *bytes, char *read_file) {
   FILE *file = fopen(read_file, "w");
   fputs(bytes, file);
   fclose(file);
