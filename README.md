@@ -10,3 +10,5 @@ Shows current swap usage
 ## network_in_out.c
 Shows incoming and outgoing network traffic
 
+## cpu.c
+Shows CPU usage and CPU temperature
