@@ -11,9 +11,9 @@ void bytes_diff(int counter, int time, char *bytes_current, char *bytes_last, ch
 int main() {
   
   char rx_bytes_current[] = "/sys/class/net/enp5s0/statistics/rx_bytes"; /* File to fetch rx_bytes from */
-  char rx_bytes_last[] = "./tmp/net_in_tmp"; /* Tmp file to store rx_bytes in */
+  char rx_bytes_last[] = "/tmp/net_in_tmp"; /* Tmp file to store rx_bytes in */
   char tx_bytes_current[] = "/sys/class/net/enp5s0/statistics/tx_bytes"; /* File to fetch tx_bytes from */
-  char tx_bytes_last[] = "./tmp/net_out_tmp"; /* Tmp file to store tx_bytes in */
+  char tx_bytes_last[] = "/tmp/net_out_tmp"; /* Tmp file to store tx_bytes in */
   
   char bytes_in_current[STRSIZE]; /* String of bytes form rx_bytes */
   char bytes_in_last[STRSIZE]; /* Last copied value to tmp file from rx_bytes */
