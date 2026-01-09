@@ -37,7 +37,7 @@ int main() {
 
   bytes_diff(i, time_diff, bytes_in_current, bytes_in_last, converted_in_bytes_diff);
   bytes_diff(i, time_diff, bytes_out_current, bytes_out_last, converted_out_bytes_diff);
-  printf("\u21F5 %s/%s", converted_in_bytes_diff, converted_out_bytes_diff);
+  printf("\u21F5 %s/%s\n", converted_in_bytes_diff, converted_out_bytes_diff);
 
   return 0;
 };
