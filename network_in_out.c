@@ -4,95 +4,91 @@
 
 #define STRSIZE 32
 
-void read_bytes(
-    int *counter, char *bytes,
-    char *read_file); /* Read files from rx_bytes and define to variable */
-void write_bytes(char *bytes,
-                 char *read_file); /* Write rx_bytes from variable to tmp file
-                                      for last received bytes tracking */
-void bytes_diff(
-    int counter, int time, char *bytes_current, char *bytes_last,
-    char *converted_bytes); /* Calculate last received bytes and current
-                               received bytes for difference in recived bytes
-                               for last x seconds */
+/* Function to read bytes from a file into a given buffer */
+int read_bytes(const char *file_path, char *buffer, size_t buffer_size) {
+  FILE *file = fopen(file_path, "r");
+  if (file == NULL) {
+    perror("Error opening file");
+    return 1;
+  }
 
+  if (fgets(buffer, buffer_size, file) == NULL) {
+    perror("Error reading file");
+    fclose(file);
+    return 2;
+  }
+
+  fclose(file);
+  return 0;
+}
+
+/* Function to write bytes to a file */
+int write_bytes(const char *file_path, const char *data) {
+  FILE *file = fopen(file_path, "w");
+  if (file == NULL) {
+    perror("Error opening file for writing");
+    return 1;
+  }
+
+  if (fputs(data, file) == EOF) {
+    perror("Error writing to file");
+    fclose(file);
+    return 2;
+  }
+
+  fclose(file);
+  return 0;
+}
+
+/* Function to compute the difference between two byte counts and return as
+ * human-readable */
+void compute_bytes_diff(const char *bytes_current, const char *bytes_last,
+                        int time_diff, char *result) {
+  unsigned long long current = strtoull(bytes_current, NULL, 10);
+  unsigned long long last = strtoull(bytes_last, NULL, 10);
+  unsigned long long diff = current > last ? current - last : 0;
+
+  /* Convert to kilobytes per second */
+  diff = diff / 1024 / time_diff;
+  if (diff > 1024) {
+    sprintf(result, "%.1fM", diff / 1024.0);
+  } else {
+    sprintf(result, "%lluK", diff);
+  }
+}
+
+/* Main function */
 int main() {
+  const char *rx_current_path = "/sys/class/net/enp5s0/statistics/rx_bytes";
+  const char *rx_last_path = "/tmp/net_in_tmp";
+  const char *tx_current_path = "/sys/class/net/enp5s0/statistics/tx_bytes";
+  const char *tx_last_path = "/tmp/net_out_tmp";
 
-  char rx_bytes_current[] =
-      "/sys/class/net/enp5s0/statistics/rx_bytes"; /* File to fetch rx_bytes
-                                                      from */
-  char rx_bytes_last[] = "/tmp/net_in_tmp"; /* Tmp file to store rx_bytes in */
-  char tx_bytes_current[] =
-      "/sys/class/net/enp5s0/statistics/tx_bytes"; /* File to fetch tx_bytes
-                                                      from */
-  char tx_bytes_last[] = "/tmp/net_out_tmp"; /* Tmp file to store tx_bytes in */
+  char rx_current[STRSIZE], rx_last[STRSIZE], rx_diff[STRSIZE];
+  char tx_current[STRSIZE], tx_last[STRSIZE], tx_diff[STRSIZE];
+  int time_diff = 5; /* interval for checking difference in seconds */
 
-  char bytes_in_current[STRSIZE]; /* String of bytes form rx_bytes */
-  char bytes_in_last[STRSIZE]; /* Last copied value to tmp file from rx_bytes */
-  char converted_in_bytes_diff[STRSIZE]; /* String of converted rx difference in
-                                            kilobytes or megabytes */
-  char bytes_out_current[STRSIZE];       /* String of bytes form tx_bytes */
-  char
-      bytes_out_last[STRSIZE]; /* Last copied value to tmp file from tx_bytes */
-  char converted_out_bytes_diff[STRSIZE]; /* String of converted tx difference
-                                             in kilobytes or megabytes */
+  /* Handle RX bytes */
+  if (read_bytes(rx_current_path, rx_current, STRSIZE) != 0 ||
+      read_bytes(rx_last_path, rx_last, STRSIZE) != 0) {
+    fprintf(stderr, "Failed to read RX bytes\n");
+    strcpy(rx_diff, "NA");
+  } else {
+    write_bytes(rx_last_path, rx_current);
+    compute_bytes_diff(rx_current, rx_last, time_diff, rx_diff);
+  }
 
-  int i = 0; /* Int for counting failed file functions */
-  int time_diff =
-      5; /* Time since last diff check, just set it to the interval the script
-            will run on, or use the time header to check tmp file filestamp */
+  /* Handle TX bytes */
+  if (read_bytes(tx_current_path, tx_current, STRSIZE) != 0 ||
+      read_bytes(tx_last_path, tx_last, STRSIZE) != 0) {
+    fprintf(stderr, "Failed to read TX bytes\n");
+    strcpy(tx_diff, "NA");
+  } else {
+    write_bytes(tx_last_path, tx_current);
+    compute_bytes_diff(tx_current, tx_last, time_diff, tx_diff);
+  }
 
-  read_bytes(&i, bytes_in_current, rx_bytes_current);
-  read_bytes(&i, bytes_in_last, rx_bytes_last);
-  write_bytes(bytes_in_current, rx_bytes_last);
-
-  i = 0; /* Resetting i for counting bytes out */
-
-  read_bytes(&i, bytes_out_current, tx_bytes_current);
-  read_bytes(&i, bytes_out_last, tx_bytes_last);
-  write_bytes(bytes_out_current, tx_bytes_last);
-
-  bytes_diff(i, time_diff, bytes_in_current, bytes_in_last,
-             converted_in_bytes_diff);
-  bytes_diff(i, time_diff, bytes_out_current, bytes_out_last,
-             converted_out_bytes_diff);
-  printf("NET: \u2193 %s / \u2191 %s\n", converted_in_bytes_diff,
-         converted_out_bytes_diff);
+  printf("NET: ↓ %s / ↑ %s\n", rx_diff, tx_diff);
 
   return 0;
-};
-
-void read_bytes(int *counter, char *bytes, char *read_file) {
-  FILE *file = fopen(read_file, "r");
-  if (file == NULL) {
-    (*counter)++;
-  } else {
-    fgets(bytes, STRSIZE, file);
-    fclose(file);
-  }
-}
-
-void write_bytes(char *bytes, char *read_file) {
-  FILE *file = fopen(read_file, "w");
-  fputs(bytes, file);
-  fclose(file);
-}
-
-void bytes_diff(int counter, int time, char *bytes_current, char *bytes_last,
-                char *converted_bytes) {
-  if (counter < 1) {
-    unsigned long long converted_bytes_current =
-        strtoul(bytes_current, NULL, 10);
-    unsigned long long converted_bytes_last = strtoul(bytes_last, NULL, 10);
-    int converted_bytes_diff =
-        ((converted_bytes_current - converted_bytes_last) / 1024) / 5;
-    if (converted_bytes_diff > 1024) {
-      float tmp_result = (float)converted_bytes_diff / (float)1024;
-      sprintf(converted_bytes, "%.1fM", tmp_result);
-    } else {
-      sprintf(converted_bytes, "%dK", converted_bytes_diff);
-    }
-  } else {
-    sprintf(converted_bytes, "NA");
-  }
 }

@@ -1,14 +1,11 @@
 # statbar_scripts
-Small programs in C displaying stats for statusbars
-
-## memory.c
-Shows current RAM usage
-
-## swap.c
-Shows current swap usage
-
-## network_in_out.c
-Shows incoming and outgoing network traffic
-
-## cpu.c
-Shows CPU usage and CPU temperature
+Small C programs for swaybar.
+### memory.c
+Displays current RAM usage:
+**Output**: `RAM: 8.2G/16G`
+### swap.c
+Displays current swap usage:
+**Output**: `SWP: 2.5G/8G`
+### network_in_out.c
+Displays current network usage:
+**Output**:`NET: ↓ 1.5M / ↑ 800K`
