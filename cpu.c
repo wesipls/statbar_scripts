@@ -34,6 +34,7 @@ void read_prev_usage(unsigned long *prev_total, unsigned long *prev_idle) {
     fclose(tmp_file);
   }
 }
+
 /* Calculates and prints CPU usage */
 void calculate_cpu_usage(unsigned long prev_total, unsigned long prev_idle,
                          unsigned long current_total,
@@ -44,6 +45,7 @@ void calculate_cpu_usage(unsigned long prev_total, unsigned long prev_idle,
       ((double)(total_final - total_idle) * 100) / (double)total_final;
   printf("CPU: %.2f%%\n", usage);
 }
+
 /* Writes current values to tmp file */
 void write_tmp_file(unsigned long current_total, unsigned long current_idle) {
   FILE *file = fopen("/tmp/cpu_usage", "w");
