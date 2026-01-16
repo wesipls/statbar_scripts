@@ -1,5 +1,7 @@
 # statbar_scripts
 Small C programs for swaybar.
+## status.sh
+A shell script to run the C programs and format their output for swaybar.
 ## memory.c
 Displays current RAM usage:  
 **Output**: `RAM: 8.2G/16G`

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#Status script for swaybar
+
+# Header
+echo '{ "version": 1 }'
+
+# Start infinite loop for status updates
+echo '['
+echo '[],'
+
+# Mark that we are starting the infinite loop
+while true; do
+  # Current Time
+  CURRENT_TIME=$(date +'%a %d %b %H:%M')
+  CPUTMP=$(sensors | awk '/Tccd1/{print $2}')
+  RAM=$(/home/wesipls/.config/sway/statbar/memory)
+  SWAP=$(/home/wesipls/.config/sway/statbar/swap)
+  CPU=$(/home/wesipls/.config/sway/statbar/cpu)
+  NET=$(/home/wesipls/.config/sway/statbar/network_in_out)
+
+  # Create JSON array for bar items
+  echo '['
+  echo '{ "full_text": "'"$RAM"'",
+          "min_width": 144,
+          "align": "center"
+        },'
+  echo '{ "full_text": "'"$SWAP"'",
+          "min_width": 144,
+          "align": "center"
+        },'
+  echo '{ "full_text": "'"$CPU $CPUTMP"'",
+          "min_width": 192,
+          "align": "center"
+        },'
+  echo '{ 
+          "full_text": "'"$CURRENT_TIME"'",
+          "min_width": 144,
+          "align": "center"
+        },'
+  echo '],'
+
+  sleep 5 # Update every second
+done
