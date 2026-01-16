@@ -9,15 +9,6 @@ void read_proc_stat(unsigned long *prev_total, unsigned long *prev_idle,
   }
 
   char line[256];
-  *prev_total = 0;
-  *prev_idle = 0;
-  FILE *tmp_file = fopen("/tmp/cpu_usage", "r");
-  if (tmp_file) {
-    if (fscanf(tmp_file, "%lu %lu", prev_total, prev_idle) != 2) {
-      perror("Failed to open /tmp/cpu_usage");
-    }
-    fclose(tmp_file);
-  }
 
   if (fgets(line, sizeof(line), file)) {
     /* Variables to hold CPU usage data */
@@ -36,6 +27,16 @@ void read_proc_stat(unsigned long *prev_total, unsigned long *prev_idle,
   }
 
   fclose(file);
+}
+
+void read_prev_usage(unsigned long *prev_total, unsigned long *prev_idle) {
+  FILE *tmp_file = fopen("/tmp/cpu_usage", "r");
+  if (tmp_file) {
+    if (fscanf(tmp_file, "%lu %lu", prev_total, prev_idle) != 2) {
+      perror("Failed to open /tmp/cpu_usage");
+    }
+    fclose(tmp_file);
+  }
 }
 
 void calculate_cpu_usage(unsigned long prev_total, unsigned long prev_idle,
@@ -63,6 +64,7 @@ int main() {
   unsigned long prev_total = 0, prev_idle = 0, current_total = 0,
                 current_idle = 0;
   read_proc_stat(&prev_total, &prev_idle, &current_total, &current_idle);
+  read_prev_usage(&prev_total, &prev_idle);
   calculate_cpu_usage(prev_total, prev_idle, current_total, current_idle);
   write_tmp_file(current_total, current_idle);
   return 0;
