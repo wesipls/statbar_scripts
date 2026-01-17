@@ -13,10 +13,14 @@ echo '[],'
 while true; do
   # Current Time
   CURRENT_TIME=$(date +'%a %d %b %H:%M')
-  CPUTMP=$(sensors | awk '/Tccd1/{print $2}') #Rebuild this bad boy in C if possible, hwmon might change per reboot, the internet told me so and im to lazy to check for now.
+  CPUTMP=$(
+    i=$(sensors | awk '/Tccd1/{print $2}' | rev | cut -c6- | rev)
+    echo "$i°C"
+  ) #Rebuild this bad boy in C if possible, hwmon might change per reboot, the internet told me so and im to lazy to check for now.
   RAM=$(/home/wesipls/.config/sway/statbar/memory)
   SWAP=$(/home/wesipls/.config/sway/statbar/swap)
   CPU=$(/home/wesipls/.config/sway/statbar/cpu)
+  GPU=$(/home/wesipls/.config/sway/statbar/cpu)
   NET=$(/home/wesipls/.config/sway/statbar/network_in_out)
 
   # Create JSON array for bar items
@@ -30,6 +34,10 @@ while true; do
           "align": "center"
         },'
   echo '{ "full_text": "'"$CPU $CPUTMP"'",
+          "min_width": 192,
+          "align": "center"
+        },'
+  echo '{ "full_text": "'"$GPU"'",
           "min_width": 192,
           "align": "center"
         },'
