@@ -20,7 +20,7 @@ while true; do
   RAM=$(/home/wesipls/.config/sway/statbar/memory)
   SWAP=$(/home/wesipls/.config/sway/statbar/swap)
   CPU=$(/home/wesipls/.config/sway/statbar/cpu)
-  GPU=$(/home/wesipls/.config/sway/statbar/cpu)
+  GPU=$(/home/wesipls/.config/sway/statbar/gpu)
   NET=$(/home/wesipls/.config/sway/statbar/network_in_out)
 
   # Create JSON array for bar items
@@ -34,11 +34,11 @@ while true; do
           "align": "center"
         },'
   echo '{ "full_text": "'"$CPU $CPUTMP"'",
-          "min_width": 192,
+          "min_width": 144,
           "align": "center"
         },'
   echo '{ "full_text": "'"$GPU"'",
-          "min_width": 192,
+          "min_width": 144,
           "align": "center"
         },'
   echo '{ 
