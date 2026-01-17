@@ -19,6 +19,7 @@ Displays current GPU usage and temperature:
 **Output**: `GPU: 15% 15°C`
 
 [NOTE]: These programs are provided as-is and may require modifications, below are a few suggestion on the top of my head:  
+
 status.sh:  
 -Change the path for the scripts  
 
