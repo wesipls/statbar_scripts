@@ -17,6 +17,12 @@ Displays current CPU usage:
 ## gpu.c
 Displays current GPU usage and temperature:  
 **Output**: `GPU: 15% 15°C`
+## sda.c
+Displays current used disk space on sda:  
+**Output**: `DISK SDA: 4%`
+## disk_io.sh
+Displays current disk I/O usage on sda:  
+Output: `↓ 1.2M / ↑ 500.0K`
 
 [NOTE]: These programs are provided as-is and may require modifications, below are a few suggestion on the top of my head:  
 

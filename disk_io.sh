@@ -5,12 +5,10 @@
 # Function to convert bytes to human-readable format
 to_human_readable() {
   local bytes=$1
-  if [ "$bytes" -lt 1024 ]; then
-    echo "${bytes}B"
-  elif [ "$bytes" -lt 1048576 ]; then
-    echo "$(awk "BEGIN {printf \"%.1f\", ${bytes}/1024}")KB"
+  if [ "$bytes" -lt 1048576 ]; then
+    echo "$(awk "BEGIN {printf \"%.1f\", ${bytes}/1024}")K"
   else
-    echo "$(awk "BEGIN {printf \"%.1f\", ${bytes}/1048576}")MB"
+    echo "$(awk "BEGIN {printf \"%.1f\", ${bytes}/1048576}")M"
   fi
 }
 
