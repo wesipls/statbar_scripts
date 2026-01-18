@@ -1,18 +1,14 @@
 #include <stdio.h>
 #include <sys/statvfs.h>
 
-#include <string.h> // Required for strstr function
-#include <unistd.h>
-#include <stdlib.h> // Required for getenv, atol
 #include <stdbool.h> // Required for boolean values
+#include <stdlib.h>  // Required for getenv, atol
+#include <string.h>  // Required for strstr function
+#include <unistd.h>
 
-int main(int argc, char *argv[]) {
-  if(argc != 2) {
-    fprintf(stderr, "Usage: %s <wait_time_in_seconds>\n", argv[0]);
-    return 1;
-  }
+int main() {
 
-  unsigned long wait = atol(argv[1]); // User-defined wait time from command line
+  int wait = 5; // User-defined wait time from command line
 
   struct statvfs stat;
 
