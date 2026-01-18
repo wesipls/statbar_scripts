@@ -17,7 +17,7 @@ int main() {
   int rounded_used_percentage =
       (int)(used_percentage + 0.5); // Round to nearest integer
 
-  printf("DISK SDA: %d%%\n", rounded_used_percentage);
+  printf("SDA: %d%%\n", rounded_used_percentage);
 
   return 0;
 }
