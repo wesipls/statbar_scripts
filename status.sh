@@ -56,7 +56,7 @@ while true; do
         },'
   echo '{ 
           "full_text": "'"$WEATHER"'",
-          "min_width": 144,
+          "min_width": 288,
           "align": "center"
         },'
   echo '{ 
