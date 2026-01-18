@@ -73,6 +73,7 @@ int main() {
       read_bytes(rx_last_path, rx_last, STRSIZE) != 0) {
     fprintf(stderr, "Failed to read RX bytes\n");
     strcpy(rx_diff, "NA");
+    write_bytes(rx_last_path, rx_current);
   } else {
     write_bytes(rx_last_path, rx_current);
     compute_bytes_diff(rx_current, rx_last, time_diff, rx_diff);
@@ -83,6 +84,7 @@ int main() {
       read_bytes(tx_last_path, tx_last, STRSIZE) != 0) {
     fprintf(stderr, "Failed to read TX bytes\n");
     strcpy(tx_diff, "NA");
+    write_bytes(tx_last_path, tx_current);
   } else {
     write_bytes(tx_last_path, tx_current);
     compute_bytes_diff(tx_current, tx_last, time_diff, tx_diff);
