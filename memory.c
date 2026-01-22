@@ -1,17 +1,18 @@
+/*
+  Usage: ./memory
+  Example Output: RAM: 7.8G/15.6G
+
+  There is a more accurate way to get memory usage on Linux systems using the
+  free -m command which returns AvailableMemory This program does not take into
+  account freeable memory, only empty memory vs used memory. Just a heads up if
+  you're planning on using this program, each to their own needs.
+ */
+
 #include <stdio.h>
 #include <sys/sysinfo.h>
 
-/* This program does not use the free -m AvailableMemory estimation, but rather
- * checks flat out used ram vs empty ram, */
-/* Some used ram can quickly be reassigned to new programs and is assigned as
- * AvailableMemory, hence many RAM programs will give a lower used ram
- * esitmation than this program */
-/* Just as a heads up if you're palnning on using this program */
-
-/* Converts bytes to gigabytes */
 double bytes_to_gb(unsigned long bytes) { return bytes / (double)1073741824; }
 
-/* Retrieves memory statistics */
 struct sysinfo get_memory_info() {
   struct sysinfo info;
   if (sysinfo(&info) != 0) {
@@ -20,14 +21,12 @@ struct sysinfo get_memory_info() {
   return info;
 }
 
-/* Calculates memory usage */
 void calculate_memory_usage(struct sysinfo info, double *ram_used,
                             double *ram_total) {
   *ram_total = bytes_to_gb(info.totalram);
   *ram_used = *ram_total - bytes_to_gb(info.freeram);
 }
 
-/* Displays memory usage */
 void display_memory_usage(double ram_used, double ram_total) {
   printf("RAM: %.1fG/%.1fG\n", ram_used, ram_total);
 }
