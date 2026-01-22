@@ -1,3 +1,11 @@
+/*
+  Usage: ./gpu
+  Example output: GPU: 45% +65°C
+
+  Requires: ROCm SMI library, and a compatible AMD GPU.
+  Assumes the first GPU (ID 0) is to be monitored.
+ */
+
 #include <inttypes.h>
 #include <rocm_smi/rocm_smi.h>
 #include <stdint.h>
@@ -8,13 +16,11 @@ int main() {
   uint32_t gpu_busy_percent;
   uint32_t gpu_id = 0;
 
-  /* Initialize the ROCm SMI library */
   if ((status = rsmi_init(RSMI_INIT_FLAG_ALL_GPUS)) != RSMI_STATUS_SUCCESS) {
     fprintf(stderr, "Failed to initialize ROCm SMI (Error Code: %d)\n", status);
     return -1;
   }
 
-  /* Retrieve GPU usage */
   if ((status = rsmi_dev_busy_percent_get(gpu_id, &gpu_busy_percent)) !=
       RSMI_STATUS_SUCCESS) {
     fprintf(stderr, "Failed to retrieve GPU usage for device %u\n", gpu_id);
@@ -22,7 +28,6 @@ int main() {
     return -1;
   }
 
-  /* Retrieve GPU temperature */
   uint64_t temp;
   if ((status = rsmi_dev_temp_metric_get(gpu_id, 0, RSMI_TEMP_CURRENT,
                                          (int64_t *)&temp)) !=
@@ -33,7 +38,6 @@ int main() {
     return -1;
   }
 
-  /* Print GPU usage and temperature */
   printf("GPU: %u%% +%lu°C\n", gpu_busy_percent, temp / 1000);
   rsmi_shut_down();
   return 0;
