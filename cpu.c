@@ -1,6 +1,16 @@
+/*
+  Usage: ./cpu
+  Example output: CPU: 5%
+
+  Fetches CPU statistics from /proc/stat, saves old values in /tmp/cpu_usage.
+  Calculates CPU usage in percentage between old values and current values.
+
+  Should work with any modern CPU architecture, as long as /proc/stat is
+  available.
+*/
+
 #include <stdio.h>
 
-/* Retrieves CPU stats from /proc/stat */
 void read_proc_stat(unsigned long *prev_total, unsigned long *prev_idle,
                     unsigned long *current_total, unsigned long *current_idle) {
   FILE *file = fopen("/proc/stat", "r");
@@ -24,7 +34,6 @@ void read_proc_stat(unsigned long *prev_total, unsigned long *prev_idle,
   fclose(file);
 }
 
-/* Retrieves previous values from tmp file*/
 void read_prev_usage(unsigned long *prev_total, unsigned long *prev_idle) {
   FILE *tmp_file = fopen("/tmp/cpu_usage", "r");
   if (tmp_file) {
@@ -35,7 +44,6 @@ void read_prev_usage(unsigned long *prev_total, unsigned long *prev_idle) {
   }
 }
 
-/* Calculates and prints CPU usage */
 void calculate_cpu_usage(unsigned long prev_total, unsigned long prev_idle,
                          unsigned long current_total,
                          unsigned long current_idle) {
@@ -45,7 +53,6 @@ void calculate_cpu_usage(unsigned long prev_total, unsigned long prev_idle,
   printf("CPU: %d%%\n", usage);
 }
 
-/* Writes current values to tmp file */
 void write_tmp_file(unsigned long current_total, unsigned long current_idle) {
   FILE *file = fopen("/tmp/cpu_usage", "w");
   if (!file) {
