@@ -1,8 +1,19 @@
 #!/bin/bash
 
-# This script measures the sda disk IO in kb/mb per second
+# Usage: ./disk_io.sh
+# Example output: ↑ 1.2M / ↓ 3.4M
+#
+# Fetces disk io statistics from /sys/class/block/sdb/stat, saves old values in /tmp/disk_in and /tmp/disk_out.
+# Measures the sdb disk IO in kb/mb per second.
+#
+# Assumes this script is executed every 5 seconds, if you plan on running it with another interval update interval variable.
+# Assumes sdb is the disk to monitor, change disk variable if needed.
+#
+# Should work on any Linux as long as /sys/class/block/sdb/stat is available.
 
-# Function to convert bytes to human-readable format
+interval=5
+disk=sdb
+
 to_human_readable() {
   local bytes=$1
   if [ "$bytes" -lt 1048576 ]; then
@@ -18,8 +29,8 @@ if [[ -f /tmp/disk_in && -f /tmp/disk_out ]]; then
   start_write=$(cat /tmp/disk_out)
 else
   # If files don't exist, initialize them
-  start_read=$(cat /sys/class/block/sda/stat | awk '{print $3}')
-  start_write=$(cat /sys/class/block/sda/stat | awk '{print $7}')
+  start_read=$(cat /sys/class/block/$disk/stat | awk '{print $3}')
+  start_write=$(cat /sys/class/block/$disk/stat | awk '{print $7}')
   echo $start_read >/tmp/disk_in
   echo $start_write >/tmp/disk_out
   echo "No previous data available. Initialization complete."
@@ -27,12 +38,12 @@ else
 fi
 
 # Get current disk statistics
-end_read=$(cat /sys/class/block/sda/stat | awk '{print $3}')
-end_write=$(cat /sys/class/block/sda/stat | awk '{print $7}')
+end_read=$(cat /sys/class/block/$disk/stat | awk '{print $3}')
+end_write=$(cat /sys/class/block/$disk/stat | awk '{print $7}')
 
 # Calculate the difference in bytes per second
-read_diff=$(((end_read - start_read) * 512 / 5))
-write_diff=$(((end_write - start_write) * 512 / 5))
+read_diff=$(((end_read - start_read) * 512 / interval))
+write_diff=$(((end_write - start_write) * 512 / interval))
 
 # Save the current data for the next run
 echo $end_read >/tmp/disk_in
