@@ -1,5 +1,10 @@
 # statbar_scripts
-Small C programs for swaybar.
+Small C programs and shell scripts for swaybar.
+
+> [!NOTE]  
+> These programs are provided as-is and may require modifications.  
+> if any program/script is not working there should be a comment in the beginning of said file explaining why.
+
 ### status.sh
 A shell script to run the C programs and format their output for swaybar.
 ### memory.c
@@ -32,6 +37,3 @@ Output: `🌫   0.0mm   →10km/h   -1°C   (-4°C)`
 ### updates.sh
 Displays count of currently upgradeable packages.  
 Output: `2 Upgradeble packages`
-
-> [!NOTE]  
-> These programs are provided as-is and may require modifications, if any progam is not working there should be a comment in the source explaining why.
