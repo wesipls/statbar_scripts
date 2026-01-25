@@ -33,4 +33,5 @@ Output: `🌫   0.0mm   →10km/h   -1°C   (-4°C)`
 Displays count of currently upgradeable packages.  
 Output: `2 Upgradeble packages`
 
-> [!NOTE]: These programs are provided as-is and may require modifications, if any progam is not working there should be a comment in the source explaining why.
+> [!NOTE]  
+> These programs are provided as-is and may require modifications, if any progam is not working there should be a comment in the source explaining why.
