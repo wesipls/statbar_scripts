@@ -1,4 +1,4 @@
-# statbar_scripts
+# statbar
 Small C programs and shell scripts for swaybar.
 
 > [!NOTE]  
